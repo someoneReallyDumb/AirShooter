@@ -5,22 +5,29 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using AirShooter.Classes;
+using AirShooter.Classes.SaveData;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace monogame.Classes
+namespace AirShooter.Classes
 {
     public class Player
     {
         private Vector2 _position;
         private Texture2D _texture;
         private float _speed = 7;
+        private int _health = 10;
+        private int _score = 0;
+        public event Action<int> TakeDamage;
+        public event Action<int> UpdateScore;
         private Rectangle _collision;
+        private SoundEffect _soundEffect;
         private List<Bullet> _bullets = new List<Bullet>();
-        //private int _timer = 0;
-        //private int _maxTime = 10;
+        private int _timer = 0;
+        private int _maxTime = 10;
         public Rectangle Collision
         {
             get { return _collision; }
@@ -28,6 +35,14 @@ namespace monogame.Classes
         public List<Bullet> Bullets
         {
             get { return _bullets; }
+        }
+        public int Health
+        {
+            get => _health;
+        }
+        public int Score
+        {
+            get => _score;
         }
         public Player()
         {
@@ -38,6 +53,7 @@ namespace monogame.Classes
         public void LoadContent(ContentManager content)
         {
             _texture = content.Load<Texture2D>("player");
+            _soundEffect = content.Load<SoundEffect>("laserFire");
         }
         public void Update(int widthScreen, int heightScreen, ContentManager content)
         {
@@ -81,18 +97,19 @@ namespace monogame.Classes
             _collision = new Rectangle((int)_position.X + 20,
                 (int)_position.Y + 15,
                 _texture.Width - 40, _texture.Height - 40);
-            //if (_timer <= _maxTime)
-            //{
-                //_timer++;
-            //}
-            if (keyboard.IsKeyDown(Keys.Space))   // && _timer >= _maxTime
+            if (_timer <= _maxTime)
+            {
+                _timer++;
+            }
+            if (keyboard.IsKeyDown(Keys.Space) && _timer >= _maxTime)   // && _timer >= _maxTime
             {
                 Bullet bullet = new Bullet();
                 bullet.Position = new Vector2(_position.X + bullet.Width / 4, 
                     _position.Y + _texture.Height / 2 - bullet.Height / 2);
                 bullet.LoadContent(content);
                 _bullets.Add(bullet);
-                //_timer = 0;
+                PlaySoundEffect(bullet);
+                _timer = 0;
             }
             foreach (Bullet bullet in _bullets)
             {
@@ -112,6 +129,67 @@ namespace monogame.Classes
             foreach (Bullet bullet in _bullets)
             {
                 bullet.Draw(spriteBatch);
+            }
+        }
+        public void PlaySoundEffect(Bullet bullet)
+        {
+            SoundEffectInstance instance = _soundEffect.CreateInstance();
+            instance.Volume = 0.1f;
+            instance.Play();
+        }
+        public void Damage()
+        {
+            _health--;
+            if (TakeDamage != null)
+                TakeDamage(_health);
+        }
+        public void AddScore()
+        {
+            _score++;
+            if (UpdateScore != null) UpdateScore(_score);
+        }
+        public void Reset()
+        {
+            _position = new Vector2(350, 400);
+            _score = 0;
+            _health = 10;
+            _bullets.Clear();
+        }
+
+        public object SaveData()
+        {
+            List<BulletData> bullets = new List<BulletData>();
+            foreach (Bullet bullet in _bullets)
+            {
+                bullets.Add((BulletData)bullet.SaveData());
+            }
+            PlayerData data = new PlayerData()
+            {
+                Position = _position,
+                Health = _health,
+                Score = _score,
+                Timer = _timer,
+                Bullets = bullets
+            };
+            return data;
+        }
+        public void LoadData(object data, ContentManager content)
+        {
+            if (!(data is PlayerData))
+            {
+                return;
+            }
+            PlayerData playerData = (PlayerData)data;
+            _position = playerData.Position;
+            _health = playerData.Health;
+            _score = playerData.Score;
+            _timer = playerData.Timer;
+            foreach (var bullet in playerData.Bullets)
+            {
+                Bullet bull = new Bullet();
+                bull.LoadData(bullet, content);
+                bull.LoadContent(content);
+                _bullets.Add(bull);
             }
         }
     }

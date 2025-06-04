@@ -22,6 +22,10 @@ namespace AirShooter.Classes
         {
             get { return _texture.Width; }
         }
+        public int Height
+        {
+            get { return _texture.Height; }
+        }
         public bool IsAlive { get; set; }
         public Vector2 Position
         {

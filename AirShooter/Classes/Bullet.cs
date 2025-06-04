@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AirShooter.Classes.SaveData;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,11 +15,15 @@ namespace AirShooter.Classes
         private Texture2D _texture;
         private int _width = 20;
         private int _height = 20;
-        private int _speed = 3;
+        private int _speed = 5;
         private Rectangle _destinationRectangle;
         private bool _isAlive;
         public Vector2 Position
         {
+            get
+            {
+                return new Vector2(_destinationRectangle.X, _destinationRectangle.Y);
+            }
             set
             {
                 _destinationRectangle.X = (int)value.X;
@@ -63,6 +68,26 @@ namespace AirShooter.Classes
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, _destinationRectangle, Color.White);
+        }
+        public object SaveData()
+        {
+            BulletData data = new BulletData();
+            {
+                Position = this.Position;
+                IsAlive = _isAlive;
+            };
+            return data;
+        }
+
+        public void LoadData(object data, ContentManager content)
+        {
+            if (!(data is BulletData))
+            {
+                return;
+            }
+            BulletData bulletData = (BulletData)data;
+            Position = bulletData.Position;
+            _isAlive = bulletData.IsAlive;
         }
     }
 }

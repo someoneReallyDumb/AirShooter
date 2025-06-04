@@ -13,30 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../../../Desktop/AirShooter/Sound/explosion.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:../../../../../Desktop/AirShooter/Sound/explosion.wav;explosion.wav
-
-#begin ../../../../../Desktop/AirShooter/Sound/gameMusic.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:../../../../../Desktop/AirShooter/Sound/gameMusic.mp3;gameMusic.mp3
-
-#begin ../../../../../Desktop/AirShooter/Sound/laserFire.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:../../../../../Desktop/AirShooter/Sound/laserFire.wav;laserFire.wav
-
-#begin ../../../../../Desktop/AirShooter/Sound/menuMusic.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:../../../../../Desktop/AirShooter/Sound/menuMusic.mp3;menuMusic.mp3
-
 #begin bgLayer1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -73,7 +49,13 @@
 /processorParam:TextureFormat=Color
 /build:endMenu.png
 
-#begin explosion.png
+#begin explosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:explosion.wav
+
+#begin explosion1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -83,7 +65,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:explosion.png
+/build:explosion1.png
 
 #begin gameFont.spritefont
 /importer:FontDescriptionImporter
@@ -91,6 +73,12 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:gameFont.spritefont
+
+#begin gameMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:gameMusic.mp3
 
 #begin laser.png
 /importer:TextureImporter
@@ -103,6 +91,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:laser.png
+
+#begin laserFire.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:laserFire.wav
 
 #begin mainbackground.png
 /importer:TextureImporter
@@ -127,6 +121,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:mainMenu.png
+
+#begin menuMusic.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:menuMusic.mp3
 
 #begin mine.png
 /importer:TextureImporter
