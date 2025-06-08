@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AirShooter.Classes.SaveData;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -18,6 +19,12 @@ namespace AirShooter.Classes
         private int _speed = 5;
         private Rectangle _destinationRectangle;
         private bool _isAlive;
+        private Vector2 _velocity;
+        private string _bulletTexture;
+        private int _widthScreen;
+
+        private SoundEffect _soundEffect;
+        private string _soundEffectName;
         public Vector2 Position
         {
             get
@@ -47,19 +54,35 @@ namespace AirShooter.Classes
             get { return _isAlive; }
             set { _isAlive = value; }
         }
-        public Bullet()
+        public Bullet(Vector2 velocity, string bulletTexture, string soundEffect, int widthScreen)
         {
             _texture = null;
             IsAlive = true;
             _destinationRectangle = new Rectangle(100, 300, _width, _height);
+            _velocity = velocity;
+            _widthScreen = widthScreen;
+            _bulletTexture = bulletTexture;
+            _soundEffectName = soundEffect;
         }
         public void LoadContent(ContentManager content)
         {
-            _texture = content.Load<Texture2D>("laser");
+            if (_bulletTexture == "laser")
+            {
+                _texture = content.Load<Texture2D>("laser");
+            }
+            else
+            {
+                _texture = content.Load<Texture2D>("enemyBullet");
+            }
+            if (_soundEffectName != null)
+            {
+                _soundEffect = content.Load<SoundEffect>(_soundEffectName);
+            }
         }
         public void Update()
         {
-            _destinationRectangle.X -= _speed;
+            _destinationRectangle.Y += (int)_velocity.Y;
+            _destinationRectangle.X += (int)_velocity.X;
             if (_destinationRectangle.Y <= 0 - _height)
             {
                 _isAlive = false;

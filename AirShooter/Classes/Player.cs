@@ -36,6 +36,10 @@ namespace AirShooter.Classes
         {
             get { return _bullets; }
         }
+        public int Width
+        {
+            get => _texture.Width;
+        }
         public int Health
         {
             get => _health;
@@ -103,7 +107,8 @@ namespace AirShooter.Classes
             }
             if (keyboard.IsKeyDown(Keys.Space) && _timer >= _maxTime)   // && _timer >= _maxTime
             {
-                Bullet bullet = new Bullet();
+                Bullet bullet = new Bullet(new Vector2(-4, 0),
+                    "laser", "laserFire", heightScreen);
                 bullet.Position = new Vector2(_position.X + bullet.Width / 4, 
                     _position.Y + _texture.Height / 2 - bullet.Height / 2);
                 bullet.LoadContent(content);
@@ -133,6 +138,10 @@ namespace AirShooter.Classes
         }
         public void PlaySoundEffect(Bullet bullet)
         {
+            if (_soundEffect == null)
+            {
+                return;
+            }
             SoundEffectInstance instance = _soundEffect.CreateInstance();
             instance.Volume = 0.1f;
             instance.Play();
@@ -142,6 +151,14 @@ namespace AirShooter.Classes
             _health--;
             if (TakeDamage != null)
                 TakeDamage(_health);
+        }
+        public void Heal()
+        {
+            _health += 5;
+            if (_health > 10)
+            {
+                _health = 10;
+            }
         }
         public void AddScore()
         {
@@ -186,7 +203,8 @@ namespace AirShooter.Classes
             _timer = playerData.Timer;
             foreach (var bullet in playerData.Bullets)
             {
-                Bullet bull = new Bullet();
+                Bullet bull = new Bullet(new Vector2(-4, 0),
+                    "laser", "laserFire", Width);
                 bull.LoadData(bullet, content);
                 bull.LoadContent(content);
                 _bullets.Add(bull);

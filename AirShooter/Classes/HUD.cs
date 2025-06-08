@@ -41,6 +41,14 @@ namespace AirShooter.Classes
         {
             _labelScore.Text = $"Score: {score}";
         }
+        public void OnPlayerHealed()
+        {
+            _healthBar.NumParts += 5;
+            if (_healthBar.NumParts > 10)
+            {
+                _healthBar.NumParts = 10;
+            }
+        }
         public void Reset()
         {
             _healthBar.NumParts = 10;
